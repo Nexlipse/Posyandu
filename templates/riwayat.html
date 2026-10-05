@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat {{ balita.nama }}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: system-ui, sans-serif; background: #fefce8; color: #422006; }
+    main { max-width: 640px; margin: 32px auto; padding: 0 16px; }
+    .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: 8px; border-bottom: 1px solid #fef9c3; text-align: left; }
+    a { color: #a16207; }
+    .trend { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+<main>
+  <a href="/">← Dashboard</a>
+  <div class="card">
+    <h1>{{ balita.nama }}</h1>
+    <p>{{ 'Laki-laki' if balita.gender=='L' else 'Perempuan' }} · lahir {{ balita.tgl_lahir }} · ortu: {{ balita.nama_ortu or '—' }}</p>
+  </div>
+  <div class="card">
+    <h2>Riwayat Pengukuran</h2>
+    <table>
+      <tr><th>Tanggal</th><th>Berat</th><th>Tinggi</th><th>Z-Score</th><th>Status</th><th>Tren</th></tr>
+      {% for d in data %}
+      <tr>
+        <td>{{ d.tanggal }}</td>
+        <td>{{ d.berat_kg }} kg</td>
+        <td>{{ d.tinggi_cm or '—' }}</td>
+        <td>{{ d.z_score }}</td>
+        <td>{{ d.status }}</td>
+        <td class="trend">{% if loop.index0 > 0 and d.berat_kg > data[loop.index0-1].berat_kg %}📈{% elif loop.index0 > 0 %}📉{% else %}•{% endif %}</td>
+      </tr>
+      {% else %}<tr><td colspan="6">Belum ada pengukuran</td></tr>{% endfor %}
+    </table>
+  </div>
+</main>
+</body>
+</html>
